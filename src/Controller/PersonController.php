@@ -2,18 +2,24 @@
 
 namespace App\Controller;
 
+use App\Service\PersonService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
 
 final class PersonController extends AbstractController
 {
-    #[Route('/person', name: 'app_person')]
-    public function index(): JsonResponse
+
+    public function __construct(
+        private PersonService $personService
+    )
     {
-        return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/PersonController.php',
-        ]);
     }
+
+    #[Route('/person', name: 'app_person', methods: 'GET')]
+    public function getAll(): JsonResponse
+    {
+        return $this->json($this->personService->getAll());
+    }
+
 }
