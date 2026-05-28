@@ -25,15 +25,15 @@ class PersonRepository extends ServiceEntityRepository
     {
         $queryBuilder = $this->createQueryBuilder("p");
 
-        if ($params['name'] ?? null){
+        if ($params['name']){
             $queryBuilder->andWhere('p.name = :name');
             $queryBuilder->setParameter('name', $params['name']);
         }
-        if ($params['email'] ?? null){
+        if ($params['email']){
             $queryBuilder->andWhere('p.email = :email');
             $queryBuilder->setParameter('email', $params['email']);
         }
-        if ($params['telephone'] ?? null){
+        if ($params['telephone']){
             $queryBuilder->andWhere('p.telephone = :telephone');
             $queryBuilder->setParameter('telephone', $params['telephone']);
         }
