@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\DTO\CreatePersonRequest;
+use App\DTO\UpdatePersonRequest;
 use App\Exception\DtoException;
 use App\Service\PersonService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -74,6 +75,35 @@ final class PersonController extends AbstractController
     {
         $this->personService->deleteById($id);
         return $this->json([], 204);
+    }
+
+    #[Route('/person/{id}', methods: 'PUT')]
+    public function updatePerson(int $id, Request $request, ValidatorInterface $validator): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+
+        $dtoRequest = new UpdatePersonRequest();
+        $dtoRequest->name = $data['name'] ?? null;
+        $dtoRequest->email = $data['email'] ?? null;
+        $dtoRequest->telephone = $data['telephone'] ?? null;
+
+        $errors = $validator->validate($dtoRequest);
+        if (count($errors) > 0){
+            $formattedErrors = [];
+
+            foreach ($errors as $error){
+                $formattedErrors[] = [
+                    'field' => $error->getPropertyPath(),
+                    'message' => $error->getMessage()
+                ];
+            }
+
+            throw new DtoException($formattedErrors);
+        }
+
+        $personUpdated = $this->personService->updatePersonById($id, $dtoRequest);
+        return $this->json($personUpdated->toArray());
+
     }
 
 }

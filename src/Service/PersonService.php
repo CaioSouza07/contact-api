@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\DTO\CreatePersonRequest;
+use App\DTO\UpdatePersonRequest;
 use App\Entity\Person;
 use App\Repository\PersonRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -56,5 +57,19 @@ class PersonService
         $this->entityManager->remove($person);
         $this->entityManager->flush();
 
+    }
+
+    public function updatePersonById(int $id, UpdatePersonRequest $data): Person
+    {
+        $person = $this->personRepository->findOneById($id);
+
+        if (!$person){
+            throw new NotFoundHttpException("Contato com ID informado não encontrado");
+        }
+
+        $person->update($data);
+        $this->entityManager->flush();
+
+        return $person;
     }
 }

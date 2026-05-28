@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\DTO\UpdatePersonRequest;
 use App\Repository\PersonRepository;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -76,13 +77,6 @@ class Person
         return $this->cpf;
     }
 
-    public function setCpf(?string $cpf): static
-    {
-        $this->cpf = $cpf;
-
-        return $this;
-    }
-
     public function toArray() : array
     {
         return [
@@ -92,5 +86,12 @@ class Person
             'telephone' => $this->telephone,
             'cpf' => $this->cpf,
         ];
+    }
+
+    public function update(UpdatePersonRequest $data): void
+    {
+        $this->name = $data->name ?? $this->name;
+        $this->email = $data->email ?? $this->email;
+        $this->telephone = $data->telephone ?? $this->telephone;
     }
 }
