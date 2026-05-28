@@ -20,9 +20,20 @@ class PersonService
     {
     }
 
-    public function getAll(): array
+    public function getAllByParams(?string $name, ?string $email, ?string $telephone): array
     {
-        return $this->personRepository->findAll();
+        if (!$name && !$email && !$telephone){
+            return $this->personRepository->findAll();
+        }
+
+        $params = [
+            'name' => $name,
+            'email' => $email,
+            'telephone' => $telephone,
+        ];
+
+        return $this->personRepository->findByParams($params);
+
     }
 
     public function addPerson(CreatePersonRequest $data): Person

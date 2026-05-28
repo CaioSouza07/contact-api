@@ -22,11 +22,15 @@ final class PersonController extends AbstractController
     }
 
     #[Route('/person', methods: 'GET')]
-    public function getAll(): JsonResponse
+    public function getAllByParams(Request $request): JsonResponse
     {
+        $name = $request->query->get('name');
+        $email = $request->query->get('email');
+        $telephone = $request->query->get('telephone');
 
-        $persons = $this->personService->getAll();
+        $persons = $this->personService->getAllByParams($name, $email, $telephone);
         $arrayPersons = array_map(fn($p) => $p->toArray(), $persons);
+
 
         return $this->json($arrayPersons);
     }
