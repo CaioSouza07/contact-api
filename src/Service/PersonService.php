@@ -2,14 +2,18 @@
 
 namespace App\Service;
 
+use App\DTO\CreatePersonRequest;
+use App\Entity\Person;
 use App\Repository\PersonRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 class PersonService
 {
 
     public function __construct(
-        private PersonRepository $personRepository
+        private PersonRepository $personRepository,
+        private EntityManagerInterface $entityManager
     )
     {
     }
@@ -19,8 +23,13 @@ class PersonService
         return $this->personRepository->findAll();
     }
 
-    public function addPerson(array $dataPerson): array
+    public function addPerson(CreatePersonRequest $data): Person
     {
+        $person = new Person($data->name, $data->email, $data->telephone, $data->cpf);
 
+        $this->entityManager->persist($person);
+        $this->entityManager->flush();
+
+        return $person;
     }
 }

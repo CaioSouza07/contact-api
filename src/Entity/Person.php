@@ -82,4 +82,15 @@ class Person
 
         return $this;
     }
+
+    public function toArray() : array
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'email' => $this->email,
+            'telephone' => $this->telephone,
+            'cpf' => $this->cpf,
+        ];
+    }
 }

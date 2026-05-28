@@ -52,9 +52,9 @@ final class PersonController extends AbstractController
             throw new DtoException($formattedErrors);
         }
 
-        return $this->json([
-            'message' => 'só exemplo que deu boa'
-        ]);
+        $newPerson = $this->personService->addPerson($dtoRequest);
+
+        return $this->json($newPerson->toArray(), 201);
 
     }
 
