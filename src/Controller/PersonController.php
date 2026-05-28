@@ -69,4 +69,11 @@ final class PersonController extends AbstractController
 
     }
 
+    #[Route('/person/{id}', methods: 'DELETE')]
+    public function deletePerson(int $id): JsonResponse
+    {
+        $this->personService->deleteById($id);
+        return $this->json([], 204);
+    }
+
 }

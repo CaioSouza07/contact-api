@@ -44,4 +44,17 @@ class PersonService
 
         return $person;
     }
+
+    public function deleteById(int $id): void
+    {
+        $person = $this->personRepository->findOneById($id);
+
+        if (!$person){
+            throw new NotFoundHttpException("Contato com ID informado não encontrado");
+        }
+
+        $this->entityManager->remove($person);
+        $this->entityManager->flush();
+
+    }
 }
