@@ -7,6 +7,7 @@ use App\Entity\Person;
 use App\Repository\PersonRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class PersonService
 {
@@ -29,6 +30,17 @@ class PersonService
 
         $this->entityManager->persist($person);
         $this->entityManager->flush();
+
+        return $person;
+    }
+
+    public function getById(int $id): Person
+    {
+        $person = $this->personRepository->findOneById($id);
+
+        if (!$person){
+            throw new NotFoundHttpException("Contato com ID informado não encontrado");
+        }
 
         return $person;
     }

@@ -30,6 +30,13 @@ final class PersonController extends AbstractController
         return $this->json($arrayPersons);
     }
 
+    #[Route('/person/{id}', methods: 'GET')]
+    public function getById(int $id): JsonResponse
+    {
+        $person = $this->personService->getById($id);
+        return $this->json($person->toArray());
+    }
+
     #[Route('/person', methods: 'POST')]
     public function addPerson(Request $request, ValidatorInterface $validator): JsonResponse
     {
