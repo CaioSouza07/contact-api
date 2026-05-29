@@ -7,7 +7,6 @@ use App\DTO\UpdatePersonRequest;
 use App\Entity\Person;
 use App\Repository\PersonRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class PersonService

@@ -98,4 +98,48 @@ class PersonServiceTest extends TestCase
 
     }
 
+    public function testDeleteByIdSuccess()
+    {
+        $person = $this->createMock(Person::class);
+
+        $this->personRepository
+            ->method('findOneById')
+            ->with(1)
+            ->willReturn($person);
+
+        $this->entityManager
+            ->expects($this->once())
+            ->method('remove')
+            ->with($person);
+
+        $this->entityManager
+            ->expects($this->once())
+            ->method('flush');
+
+        $this->personService->deleteById(1);
+    }
+
+    public function testDeleteByIdNotFound()
+    {
+        $person = $this->createMock(Person::class);
+
+        $this->personRepository
+            ->method('findOneById')
+            ->with(1)
+            ->willReturn(null);
+
+        $this->entityManager
+            ->expects($this->never())
+            ->method('remove')
+            ->with($person);
+
+        $this->entityManager
+            ->expects($this->never())
+            ->method('flush');
+
+        $this->expectException(NotFoundHttpException::class);
+
+        $this->personService->deleteById(1);
+    }
+
 }
