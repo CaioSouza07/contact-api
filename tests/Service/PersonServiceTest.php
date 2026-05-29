@@ -3,6 +3,7 @@
 namespace App\Tests\Service;
 
 use App\DTO\CreatePersonRequest;
+use App\DTO\UpdatePersonRequest;
 use App\Entity\Person;
 use App\Repository\PersonRepository;
 use App\Service\PersonService;
@@ -140,6 +141,53 @@ class PersonServiceTest extends TestCase
         $this->expectException(NotFoundHttpException::class);
 
         $this->personService->deleteById(1);
+    }
+
+    public function testUpdatePersonById()
+    {
+        $person = $this->createMock(Person::class);
+        $request = $this->createMock(UpdatePersonRequest::class);
+
+        $this->personRepository
+            ->method('findOneById')
+            ->with(1)
+            ->willReturn($person);
+
+        $person
+            ->method('update')
+            ->with($request);
+
+        $this->entityManager
+            ->expects($this->once())
+            ->method('flush');
+
+        $result = $this->personService->updatePersonById(1, $request);
+
+        $this->assertSame($person, $result);
+    }
+
+    public function testUpdatePersonByIdNotFound()
+    {
+        $request = $this->createMock(UpdatePersonRequest::class);
+        $person = $this->createMock(Person::class);
+
+        $this->personRepository
+            ->method('findOneById')
+            ->with(1)
+            ->willReturn(null);
+
+        $person
+            ->expects($this->never())
+            ->method('update');
+
+        $this->entityManager
+            ->expects($this->never())
+            ->method('flush');
+
+        $this->expectException(NotFoundHttpException::class);
+
+        $result = $this->personService->updatePersonById(1, $request);
+
     }
 
 }
